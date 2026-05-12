@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhyMotion: Structured 3D Motion Reward for Physics-Grounded Human Video Generation</title>
+  <meta name="description" content="PhyMotion: a structured 3D motion reward grounded in physics simulation for evaluating and improving human video generation.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/style.css">
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">
+            <span class="phymotion">PhyMotion</span>: Structured 3D Motion Reward for
+            Physics-Grounded Human Video Generation
+          </h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://owenh-unc.github.io/">Yidong Huang<sup>1</sup></a>
+            </span>, &nbsp;
+            <span class="author-block">
+              <a href="https://zunwang1.github.io/">Zun Wang<sup>1</sup></a>
+            </span>, &nbsp;
+            <span class="author-block">
+              <a href="https://hl-hanlin.github.io/">Han Lin<sup>1</sup></a>
+            </span>, &nbsp;
+            <span class="author-block">
+              <a href="https://dkkim93.github.io/">Dong-Ki Kim<sup>2</sup></a>
+            </span>, &nbsp;
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/shayegan/">Shayegan Omidshafiei<sup>2</sup></a>
+            </span>,<br>
+            <span class="author-block">
+              <a href="https://jaehong31.github.io/">Jaehong Yoon<sup>3</sup></a>
+            </span>, &nbsp;
+            <span class="author-block">
+              <a href="https://j-min.io/">Jaemin Cho<sup>4,5</sup></a>
+            </span>, &nbsp;
+            <span class="author-block">
+              <a href="https://zhangyuejoslin.github.io/">Yue Zhang<sup>1</sup></a>
+            </span>, &nbsp;
+            <span class="author-block">
+              <a href="https://www.cs.unc.edu/~mbansal/">Mohit Bansal<sup>1</sup></a>
+            </span>
+          </div>
+
+          <div class="is-size-6 publication-authors" style="margin-top: 0.5rem;">
+            <span class="author-block"><sup>1</sup>UNC Chapel Hill,</span>
+            <span class="author-block"><sup>2</sup>FieldAI,</span>
+            <span class="author-block"><sup>3</sup>NTU,</span>
+            <span class="author-block"><sup>4</sup>AI2,</span>
+            <span class="author-block"><sup>5</sup>Johns Hopkins University</span>
+          </div>
+
+          <div class="column has-text-centered" style="margin-top: 1rem;">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/h6kplus/PhyMotion" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#bibtex" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-quote-left"></i></span>
+                  <span>BibTeX</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="hero-teaser">
+      <img src="./static/figures/3D_reward_teaser_v2.jpg" alt="PhyMotion teaser" style="width: 100%; border-radius: 6px;">
+      <p class="caption" style="text-align: center; color: #666; margin-top: 0.75rem;">
+        <strong>PhyMotion</strong> evaluates generated human motion by recovering SMPL bodies, retargeting them
+        to a humanoid in MuJoCo, and scoring three interpretable axes: kinematic plausibility,
+        contact &amp; balance, and dynamic feasibility.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Generating realistic human motion is a central yet unsolved challenge in video generation.
+            While reinforcement learning (RL)-based post-training has driven recent gains in general video quality,
+            applying it to human motion is bottlenecked by the reward signal itself.
+            Existing video rewards primarily rely on 2D perceptual signals, without explicitly modeling the
+            3D body state, contact, and dynamics underlying articulated human motion, and often assign
+            high scores to videos with floating bodies or physically implausible movements.
+          </p>
+          <p>
+            To address this, we propose <span class="phymotion">PhyMotion</span>, a structured, fine-grained
+            motion reward that grounds recovered 3D human trajectories in a physics simulator and evaluates
+            motion quality along multiple dimensions of physical feasibility. Concretely, we recover SMPL body
+            meshes from generated videos, retarget them onto a humanoid in the MuJoCo physics simulator, and
+            evaluate the resulting motion along three axes:
+            <strong>kinematic plausibility</strong>,
+            <strong>contact and balance consistency</strong>, and
+            <strong>dynamic feasibility</strong>.
+            Each component provides a continuous and interpretable signal tied to a specific aspect of motion
+            quality, allowing the reward to capture which aspects of motion are physically correct or violated.
+          </p>
+          <p>
+            Experiments show that <span class="phymotion">PhyMotion</span> achieves stronger correlation with
+            human judgments than existing reward formulations. When used for RL-based post-training, it
+            consistently improves motion realism across both autoregressive and bidirectional video generators
+            under both automatic metrics and blind human evaluation. Ablations further show that the three
+            axes provide complementary supervision signals, while the reward preserves overall video
+            generation quality with only modest training overhead.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Method</h2>
+    <div class="content">
+      <p>
+        We recover SMPL body meshes from generated videos and retarget them onto a humanoid model in the
+        <a href="https://mujoco.org">MuJoCo</a> simulator. Three feasibility scores are computed per video:
+      </p>
+      <div class="columns" style="margin-top: 1rem;">
+        <div class="column">
+          <h4 class="title is-5">Kinematic</h4>
+          <p>Joint limits, velocity bounds, and self-collisions detected from the retargeted humanoid pose.</p>
+        </div>
+        <div class="column">
+          <h4 class="title is-5">Contact &amp; Balance</h4>
+          <p>Feet anchoring, foot-floor penetration, and slip; balance from center-of-mass projection.</p>
+        </div>
+        <div class="column">
+          <h4 class="title is-5">Dynamic Feasibility</h4>
+          <p>Joint torques, ground-reaction forces, and mechanical effort from inverse dynamics (ABA).</p>
+        </div>
+      </div>
+      <div style="margin-top: 1.5rem;">
+        <img src="./static/figures/smpl_metric.jpg" alt="SMPL metric overview" style="width: 100%; border-radius: 6px;">
+        <p class="caption" style="text-align: center; color: #666; margin-top: 0.5rem;">
+          Per-axis feasibility scores derived from MuJoCo-simulated retargeted SMPL motion.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Alignment with Human Judgment</h2>
+    <div class="content">
+      <p>
+        Each of our three axes correlates more strongly with human preference rankings than existing 2D-based
+        rewards, and the combined score outperforms each axis alone.
+      </p>
+      <img src="./static/figures/human_alignment.jpg" alt="Human alignment" style="width: 100%; border-radius: 6px;">
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3 has-text-centered">Qualitative Results</h2>
+    <div class="content has-text-centered">
+      <p>
+        Models trained with <span class="phymotion">PhyMotion</span> as a reward produce more physically
+        grounded human motion than general-purpose baselines. Each row shows the same prompt rendered by
+        four models. Hover or click a video to play.
+      </p>
+    </div>
+
+    <div class="video-grid">
+      <div class="video-row video-header">
+        <div class="video-cell label-cell"><strong>Ours (s210)</strong></div>
+        <div class="video-cell label-cell"><strong>Causal Forcing 1.3B</strong></div>
+        <div class="video-cell label-cell"><strong>Wan 1.3B</strong></div>
+        <div class="video-cell label-cell"><strong>Wan2.2 5B (720p)</strong></div>
+        <div class="video-cell label-cell"><strong>EchoMotion 5B (720p)</strong></div>
+      </div>
+
+      <p class="video-prompt"><strong>Cartwheel training (Shaolin Kung Fu).</strong> A martial artist performs Shaolin Kung Fu Wushu cartwheel training, showing the fluid transition from a standing position to a powerful cartwheel.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00113.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00113.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00113.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00113.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00113.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Soccer Player.</strong> A single person dressed in soccer player blocking an imaginary ball.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00768.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00768.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00768.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00768.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00768.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Kung Fu flying kick.</strong> A young woman in traditional martial arts attire crouches, then explosively leaps forward with her right leg high in the air.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00825.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00825.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00825.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00825.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00825.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Picking up a dollar from an elderly man.</strong> A young woman approaches an elderly man and picks up a dollar from him. </p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00086.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00086.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00086.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00086.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00086.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Cartwheel in open space.</strong> A young person lunges forward, plants their hands, kicks their legs upward through a handstand-like inversion, and lands back on their feet.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00107.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00107.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00107.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00107.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00107.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Backward ice-skating pivot.</strong> A young woman glides backward on ice skates, executing a fluid pivoting turn with sweeping arm movements and alternating supporting legs.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00626.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00626.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00626.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00626.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00626.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Side-lying leg lift.</strong> A person performs a leg lifting exercise while lying on their side, sequentially lifting one leg up and back down with controlled motion.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00724.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00724.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00724.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00724.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00724.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Standing butt kicks.</strong> A person stands upright with arms relaxed, flexing her knee to bring the heel up toward the glutes in a smooth, rhythmic exercise pattern.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00256.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00256.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00256.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00256.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00256.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Bedtime routine with a dead phone.</strong> A young adult reaches his phone, put it down and gradually falls asleep.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/00299.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/00299.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/00299.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/00299.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/00299.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+
+      <p class="video-prompt"><strong>Dancing in a white dress.</strong> A young woman in a flowing white dress dances gracefully in an open field, arms extended, stepping in a circular pattern as she twirls and pivots under the sun.</p>
+      <div class="video-row">
+        <div class="video-cell"><video src="./static/videos/ours_causal_forcing_1.3b_smpl_dynamic_s210/01018.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_causal_forcing_1.3b/01018.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan_1.3b/01018.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_wan2.2_5b_720p/01018.mp4" controls muted loop playsinline preload="metadata"></video></div>
+        <div class="video-cell"><video src="./static/videos/baseline_echomotion_720p/01018.mp4" controls muted loop playsinline preload="metadata"></video></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Quantitative Comparison</h2>
+    <div class="content">
+      <div class="columns">
+        <div class="column">
+          <img src="./static/figures/vbench1_radar.jpg" alt="VBench radar" style="width: 100%; border-radius: 6px;">
+          <p class="caption" style="text-align: center; color: #666;">VBench dimensions</p>
+        </div>
+        <div class="column">
+          <img src="./static/figures/h2h_overall.jpg" alt="Head-to-head overall" style="width: 100%; border-radius: 6px;">
+          <p class="caption" style="text-align: center; color: #666;">Head-to-head human preference</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="bibtex">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">BibTeX</h2>
+    <pre><code>@article{huang2026phymotion,
+  title   = {PhyMotion: Structured 3D Motion Reward for Physics-Grounded Human Video Generation},
+  author  = {Huang, Yidong and Wang, Zun and Lin, Han and Kim, Dong-Ki and
+             Omidshafiei, Shayegan and Yoon, Jaehong and Cho, Jaemin and
+             Zhang, Yue and Bansal, Mohit},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        Page template adapted from <a href="https://nerfies.github.io/">Nerfies</a>.
+        Source on <a href="https://github.com/h6kplus/PhyMotion">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
