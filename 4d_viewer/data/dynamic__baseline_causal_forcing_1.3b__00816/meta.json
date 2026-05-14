@@ -9,5 +9,6 @@
   "num_verts": 10475,
   "video": "videos/dynamic__baseline_causal_forcing_1.3b__00816.mp4",
   "violations_pct": 100.0,
-  "has_accel": true
+  "has_accel": true,
+  "has_velocity": false
 }

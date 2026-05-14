@@ -9,5 +9,6 @@
   "num_verts": 10475,
   "video": "videos/kinematic__baseline_wan_1.3b__00520.mp4",
   "violations_pct": 4.444444444444445,
-  "has_accel": false
+  "has_accel": false,
+  "has_velocity": true
 }

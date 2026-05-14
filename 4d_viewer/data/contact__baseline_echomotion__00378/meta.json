@@ -9,5 +9,6 @@
   "num_verts": 10475,
   "video": "videos/contact__baseline_echomotion__00378.mp4",
   "violations_pct": 100.0,
-  "has_accel": false
+  "has_accel": false,
+  "has_velocity": false
 }

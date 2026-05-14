@@ -464,6 +464,27 @@ pre {
   border-radius: 14px;
 }
 
+.reset-view-btn {
+  appearance: none;
+  border: 1px solid rgba(70, 113, 145, 0.3);
+  background: #fff;
+  color: #467191;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s, color 0.15s;
+}
+.reset-view-btn:hover {
+  border-color: #467191;
+  background: #f0f4f7;
+}
+.reset-view-btn:active { transform: rotate(-30deg); }
+
 .play-btn {
   appearance: none;
   border: 1px solid #325b7a;

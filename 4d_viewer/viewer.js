@@ -98,7 +98,8 @@ let currentScene = null;
 let currentVertsF16 = null;       // Uint16Array (raw float16 bits)
 let currentVertsF32 = null;       // Float32Array view per frame (reused)
 let currentViolations = null;     // Uint8Array [T] — 1 if frame violates axis
-let currentAccel = null;          // Uint8Array [T*V] or null — per-vertex accel heat
+let currentAccel = null;          // Uint8Array [T*V] or null — per-vertex accel heat (dynamic)
+let currentVelocity = null;       // Uint8Array [T*V] or null — per-vertex velocity heat (kinematic)
 let sceneOffset = { x: 0, y: 0, z: 0 };  // subtract from each vertex to anchor body near origin
 let playheadFrame = 0;            // float frame index; advanced by animate(t) when playing
 
@@ -115,6 +116,10 @@ const CON_FRAME_START = 28;                         // from this frame onwards
 // Per-vertex accel color: white → deep blue (dynamic axis)
 const ACCEL_BASE = new THREE.Color(0xf5f3ee);       // near-white skin
 const ACCEL_HIGH = new THREE.Color(0x1a5f8a);       // saturated blue
+
+// Per-vertex velocity color: white → deep red (kinematic axis)
+const VEL_BASE = new THREE.Color(0xf5f3ee);         // near-white skin
+const VEL_HIGH = new THREE.Color(0xc94432);         // saturated red
 
 function f16toF32(u16) {
   // Half -> float (IEEE 754 half precision)
@@ -165,7 +170,15 @@ async function loadScene(meta) {
     try {
       const ar = await fetch(dataUrl(`data/${meta.key}/accel.bin`));
       if (ar.ok) currentAccel = new Uint8Array(await ar.arrayBuffer());
-    } catch (e) { /* ignore — falls back to plain skin tone */ }
+    } catch (e) { /* ignore */ }
+  }
+  // For the kinematic axis, load per-vertex velocity heat-map
+  currentVelocity = null;
+  if (meta.has_velocity) {
+    try {
+      const vr2 = await fetch(dataUrl(`data/${meta.key}/velocity.bin`));
+      if (vr2.ok) currentVelocity = new Uint8Array(await vr2.arrayBuffer());
+    } catch (e) { /* ignore */ }
   }
 
   // Compute frame-0 centroid (OpenCV coords) so we can recenter the body at origin.
@@ -276,7 +289,21 @@ function paintVertexColors(frameIdx) {
     }
   }
 
-  // Kinematic: mark wrist/hand/hip red on frames [30, 41]
+  // Kinematic: per-vertex velocity tint (white → red), applied to the whole body
+  if (axis === 'kinematic' && currentVelocity) {
+    const velStart = frameIdx * V;
+    const rB = VEL_BASE.r, gB = VEL_BASE.g, bB = VEL_BASE.b;
+    const rH = VEL_HIGH.r, gH = VEL_HIGH.g, bH = VEL_HIGH.b;
+    for (let v = 0; v < V; v++) {
+      const t = currentVelocity[velStart + v] / 255.0;
+      const off = v * 3;
+      cArr[off]     = rB + (rH - rB) * t;
+      cArr[off + 1] = gB + (gH - gB) * t;
+      cArr[off + 2] = bB + (bH - bB) * t;
+    }
+  }
+
+  // Kinematic: mark wrist/hand/hip red on frames [30, 41] (on top of velocity heat)
   if (axis === 'kinematic' && kinHighlightMask &&
       frameIdx >= KIN_FRAME_RANGE[0] && frameIdx <= KIN_FRAME_RANGE[1]) {
     const r = KIN_RED.r, g = KIN_RED.g, b = KIN_RED.b;
@@ -300,6 +327,11 @@ function paintVertexColors(frameIdx) {
   colors.attr.needsUpdate = true;
 }
 
+const DEFAULT_VIEW = {
+  cameraPos: new THREE.Vector3(),
+  target: new THREE.Vector3(),
+};
+
 function fitCamera() {
   if (!smplMesh) return;
   smplMesh.geometry.computeBoundingBox();
@@ -311,7 +343,19 @@ function fitCamera() {
   // Body lives at z ≈ -4.5; pull the camera back along +Z so it's farther from the body
   camera.position.set(center.x, center.y + size * 0.1, center.z + size * 1.6);
   controls.update();
+  // Remember this as the "default view" — clicking the reset button returns here
+  DEFAULT_VIEW.cameraPos.copy(camera.position);
+  DEFAULT_VIEW.target.copy(controls.target);
 }
+
+function resetView() {
+  camera.position.copy(DEFAULT_VIEW.cameraPos);
+  controls.target.copy(DEFAULT_VIEW.target);
+  controls.update();
+}
+
+const resetBtn = document.getElementById('reset-view-btn');
+if (resetBtn) resetBtn.addEventListener('click', resetView);
 
 // ---------- Scrub <-> video sync ----------
 let playing = false;
