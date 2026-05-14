@@ -102,12 +102,11 @@
 <section class="section">
   <div class="container is-max-desktop">
     <div class="hero-teaser">
-      <img src="./static/figures/3D_reward_teaser_v2.jpg" alt="PhyMotion teaser" style="width: 100%; border-radius: 6px;">
-      <p class="caption" style="text-align: center; color: #666; margin-top: 0.75rem;">
-        <strong>PhyMotion</strong> evaluates generated human motion by recovering SMPL bodies, retargeting them
-        to a humanoid in MuJoCo, and scoring three interpretable axes: kinematic plausibility,
-        contact &amp; balance, and dynamic feasibility.
-      </p>
+      <video
+        src="./assets/3D_reward_teaser_v2.mp4"
+        autoplay muted loop playsinline preload="auto"
+        style="width: 70%; max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">
+      </video>
     </div>
   </div>
 </section>
@@ -210,7 +209,22 @@
 
 <section class="section">
   <div class="container">
-    <h2 class="title is-3 has-text-centered">Qualitative Results</h2>
+    <h2 class="title is-3 has-text-centered">Alignment with Human Judgment</h2>
+    <div class="content has-text-centered">
+      <p>
+        Each of our three feasibility axes correlates more strongly with human preference rankings than
+        existing 2D-based rewards, and the combined score outperforms each axis alone.
+      </p>
+      <img src="./static/figures/human_alignment.jpg"
+           alt="Human alignment"
+           style="width: 100%; display: block; margin: 0 auto; border-radius: 6px;">
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3 has-text-centered">RL Optimization Qualitative Results</h2>
     <div class="content has-text-centered">
       <p>
         Models trained with <span class="phymotion">PhyMotion</span> as a reward produce more physically
@@ -383,19 +397,61 @@
   </div>
 </section>
 
-<section class="section">
-  <div class="container is-max-desktop">
-    <h2 class="title is-3 has-text-centered">Quantitative Comparison</h2>
-    <div class="content">
-      <div class="columns">
-        <div class="column">
-          <img src="./static/figures/vbench1_radar.jpg" alt="VBench radar" style="width: 100%; border-radius: 6px;">
-          <p class="caption" style="text-align: center; color: #666;">VBench dimensions</p>
-        </div>
-        <div class="column">
-          <img src="./static/figures/h2h_overall.jpg" alt="Head-to-head overall" style="width: 100%; border-radius: 6px;">
-          <p class="caption" style="text-align: center; color: #666;">Head-to-head human preference</p>
-        </div>
+  <section class="section" id="results">
+    <div class="container">
+      <h2 class="title is-3 has-text-centered">Main Results on Human-Motion Video Generation</h2>
+      <div id="results-table-container"></div>
+    </div>
+  </section>
+
+  <script>
+    fetch("results_table.html")
+      .then(r => r.text())
+      .then(html => { document.getElementById("results-table-container").innerHTML = html; })
+      .catch(err => console.error("results_table.html failed to load:", err));
+  </script>
+
+<section class="section" id="human-preference">
+  <div class="container">
+    <h2 class="title is-3 has-text-centered">Human Preference Evaluation</h2>
+    <p class="hp-lead">
+      We collect pairwise human preferences across body structure, balance, and motion, and compute Elo
+      ratings (left) along with full pairwise win rates (right). Higher Elo is better. The matrix cell
+      <em>(A, B)</em> is the percentage of comparisons where A is preferred over B; ties count as 0.5.
+    </p>
+
+    <div class="hp-grid">
+      <div class="hp-elo">
+        <table class="results-table elo-table">
+          <caption><strong>Elo ratings</strong> from pairwise human preferences.</caption>
+          <thead>
+            <tr>
+              <th>Model</th><th>Body</th><th>Bal.</th><th>Motion</th><th>All Q</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="method">Wan2.2 5B</td><td>1376</td><td>1388</td><td>1384</td><td>1383</td></tr>
+            <tr><td class="method">EchoMotion 5B</td><td>1386</td><td>1403</td><td>1374</td><td>1387</td></tr>
+            <tr><td class="method">Wan 1.3B</td><td>1429</td><td>1440</td><td>1411</td><td>1427</td></tr>
+            <tr><td class="method">FastWan 1.3B</td><td>1526</td><td>1521</td><td>1528</td><td>1525</td></tr>
+            <tr><td class="method">Causal 1.3B</td><td>1562</td><td>1546</td><td>1553</td><td>1553</td></tr>
+            <tr><td class="method">Wan2.2 14B</td><td>1600</td><td>1593</td><td>1618</td><td>1604</td></tr>
+            <tr class="elo-divider"><td colspan="5"></td></tr>
+            <tr class="ours-row">
+              <td class="method"><span class="phymotion">Ours</span> 1.3B</td>
+              <td><span class="best">1620</span></td>
+              <td><span class="best">1610</span></td>
+              <td><span class="best">1632</span></td>
+              <td><span class="best">1621</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="hp-heatmap">
+        <img src="./static/figures/h2h_overall.jpg"
+             alt="Pairwise human-preference win-rate heatmap"
+             style="width: 100%; display: block; border-radius: 6px;">
       </div>
     </div>
   </div>

@@ -1,0 +1,188 @@
+<div class="table-wrap">
+  <table class="results-table">
+    <caption>
+      <strong>Main results on human-motion video generation.</strong>
+      We compare open-source baselines, a VLM-reward-trained baseline, and our structured 3D reward training.
+      All metrics are higher-is-better. <strong>Bold</strong>: best; <span class="second">underlined</span>: second best.
+      Percentages on our rows are relative improvements over the corresponding pre-RL base model.
+    </caption>
+
+    <thead>
+      <tr>
+        <th rowspan="2">Method</th>
+        <th colspan="5" class="group-vbench">VBench / VBench2</th>
+        <th colspan="2" class="group-videoalign">VideoAlign</th>
+        <th colspan="1" class="group-videophy">VideoPhy</th>
+        <th colspan="4" class="group-ours"><span class="phymotion">PhyMotion</span> (Ours)</th>
+      </tr>
+      <tr>
+        <th>Mot.&nbsp;Sm.</th>
+        <th>Dyn.&nbsp;Deg.</th>
+        <th>Aes.&nbsp;Q.</th>
+        <th>Hum.&nbsp;An.</th>
+        <th>Temp.&nbsp;Fl.</th>
+        <th>VA-MQ</th>
+        <th>VA-VQ</th>
+        <th>VP-PC</th>
+        <th>Kin.</th>
+        <th>Con.</th>
+        <th>Dyn.</th>
+        <th>Overall</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr class="section-row"><td colspan="13"><em>Open-source baselines</em></td></tr>
+
+      <tr>
+        <td class="method">Wan2.2 14B</td>
+        <td>0.9892</td>
+        <td>0.393</td>
+        <td>0.5141</td>
+        <td class="second">0.943</td>
+        <td>0.9857</td>
+        <td>1.133</td>
+        <td>0.557</td>
+        <td>3.97</td>
+        <td>0.881</td>
+        <td>0.733</td>
+        <td>0.912</td>
+        <td>0.842</td>
+      </tr>
+
+      <tr>
+        <td class="method">Wan2.2 5B</td>
+        <td>0.9846</td>
+        <td>0.598</td>
+        <td>0.4622</td>
+        <td>0.823</td>
+        <td>0.9803</td>
+        <td>1.069</td>
+        <td>0.514</td>
+        <td>3.91</td>
+        <td>0.880</td>
+        <td>0.710</td>
+        <td>0.913</td>
+        <td>0.834</td>
+      </tr>
+
+      <tr>
+        <td class="method">EchoMotion 5B</td>
+        <td>0.9850</td>
+        <td>0.683</td>
+        <td>0.4756</td>
+        <td>0.836</td>
+        <td>0.9777</td>
+        <td>1.044</td>
+        <td>0.565</td>
+        <td>3.74</td>
+        <td>0.888</td>
+        <td>0.702</td>
+        <td>0.918</td>
+        <td>0.836</td>
+      </tr>
+
+      <tr>
+        <td class="method">Wan 1.3B</td>
+        <td>0.9868</td>
+        <td class="second">0.700</td>
+        <td>0.4758</td>
+        <td>0.834</td>
+        <td>0.9787</td>
+        <td>1.213</td>
+        <td>0.621</td>
+        <td>3.86</td>
+        <td>0.862</td>
+        <td>0.705</td>
+        <td>0.904</td>
+        <td>0.824</td>
+      </tr>
+
+      <tr>
+        <td class="method">Causal Forcing 1.3B</td>
+        <td>0.9895</td>
+        <td>0.631</td>
+        <td class="second">0.5391</td>
+        <td>0.886</td>
+        <td>0.9819</td>
+        <td>1.241</td>
+        <td>0.575</td>
+        <td>4.06</td>
+        <td>0.927</td>
+        <td>0.739</td>
+        <td>0.948</td>
+        <td>0.871</td>
+      </tr>
+
+      <tr>
+        <td class="method">FastWan 1.3B</td>
+        <td>0.9847</td>
+        <td class="best">0.928</td>
+        <td>0.5035</td>
+        <td>0.876</td>
+        <td>0.970</td>
+        <td>1.307</td>
+        <td>0.680</td>
+        <td>3.90</td>
+        <td>0.908</td>
+        <td>0.734</td>
+        <td>0.916</td>
+        <td>0.853</td>
+      </tr>
+
+      <tr class="section-row"><td colspan="13"><em>VLM-reward trained baseline</em></td></tr>
+
+      <tr>
+        <td class="method">VideoAlign-MQ</td>
+        <td>0.9904</td>
+        <td>0.570</td>
+        <td>0.5229</td>
+        <td>0.910</td>
+        <td>0.9835</td>
+        <td class="best">1.549</td>
+        <td class="best">0.912</td>
+        <td>4.12</td>
+        <td>0.916</td>
+        <td>0.753</td>
+        <td>0.946</td>
+        <td>0.878</td>
+      </tr>
+
+      <tr class="section-row ours-section">
+        <td colspan="13"><em><span class="phymotion">PhyMotion</span> (Ours) trained with</em></td>
+      </tr>
+
+      <tr class="ours-row">
+        <td class="method">Causal Forcing 1.3B</td>
+        <td><span class="best">0.9956</span><span class="delta pos">+0.6%</span></td>
+        <td>0.411<span class="delta neg">−34.9%</span></td>
+        <td><span class="best">0.5589</span><span class="delta pos">+3.7%</span></td>
+        <td><span class="best">0.951</span><span class="delta pos">+7.3%</span></td>
+        <td><span class="best">0.9957</span><span class="delta pos">+1.4%</span></td>
+        <td><span class="second">1.313</span><span class="delta pos">+5.8%</span></td>
+        <td><span class="second">0.720</span><span class="delta pos">+25.2%</span></td>
+        <td><span class="second">4.29</span><span class="delta pos">+5.7%</span></td>
+        <td><span class="best">0.982</span><span class="delta pos">+5.9%</span></td>
+        <td><span class="best">0.809</span><span class="delta pos">+9.4%</span></td>
+        <td><span class="best">0.988</span><span class="delta pos">+4.2%</span></td>
+        <td><span class="best">0.902</span><span class="delta pos">+3.5%</span></td>
+      </tr>
+
+      <tr class="ours-row">
+        <td class="method">FastWan 1.3B</td>
+        <td><span class="second">0.9927</span><span class="delta pos">+0.8%</span></td>
+        <td>0.420<span class="delta neg">−54.7%</span></td>
+        <td>0.5218<span class="delta pos">+3.6%</span></td>
+        <td>0.867<span class="delta neg">−1.0%</span></td>
+        <td><span class="second">0.9928</span><span class="delta pos">+2.4%</span></td>
+        <td>1.318<span class="delta pos">+0.8%</span></td>
+        <td>0.687<span class="delta pos">+1.0%</span></td>
+        <td><span class="best">4.39</span><span class="delta pos">+12.6%</span></td>
+        <td><span class="best">0.982</span><span class="delta pos">+8.1%</span></td>
+        <td><span class="second">0.805</span><span class="delta pos">+9.7%</span></td>
+        <td><span class="second">0.952</span><span class="delta pos">+3.9%</span></td>
+        <td><span class="second">0.913</span><span class="delta pos">+7.0%</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
