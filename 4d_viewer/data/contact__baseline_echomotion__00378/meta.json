@@ -1,0 +1,13 @@
+{
+  "key": "contact__baseline_echomotion__00378",
+  "axis": "contact",
+  "baseline": "baseline_echomotion",
+  "sample_id": 378,
+  "label": "A single person performs a dynamic Wushu Kung Fu routine, showcasing full-body motion",
+  "fps": 16.0,
+  "num_frames": 45,
+  "num_verts": 10475,
+  "video": "videos/contact__baseline_echomotion__00378.mp4",
+  "violations_pct": 100.0,
+  "has_accel": false
+}

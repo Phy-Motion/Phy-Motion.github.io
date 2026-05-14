@@ -152,48 +152,56 @@
   </div>
 </section>
 
-<section class="section">
-  <div class="container is-max-desktop">
+<section class="section viewer-section">
+  <div class="container is-max-desktop viewer-container">
     <h2 class="title is-3 has-text-centered">Method</h2>
-    <div class="content">
-      <p>
-        We recover SMPL body meshes from generated videos and retarget them onto a humanoid model in the
-        <a href="https://mujoco.org">MuJoCo</a> simulator. Three feasibility scores are computed per video:
-      </p>
-      <div class="columns" style="margin-top: 1rem;">
-        <div class="column">
-          <h4 class="title is-5">Kinematic</h4>
-          <p>Joint limits, velocity bounds, and self-collisions detected from the retargeted humanoid pose.</p>
-        </div>
-        <div class="column">
-          <h4 class="title is-5">Contact &amp; Balance</h4>
-          <p>Feet anchoring, foot-floor penetration, and slip; balance from center-of-mass projection.</p>
-        </div>
-        <div class="column">
-          <h4 class="title is-5">Dynamic Feasibility</h4>
-          <p>Joint torques, ground-reaction forces, and mechanical effort from inverse dynamics (ABA).</p>
-        </div>
-      </div>
-      <div style="margin-top: 1.5rem;">
-        <img src="./static/figures/smpl_metric.jpg" alt="SMPL metric overview" style="width: 100%; border-radius: 6px;">
-        <p class="caption" style="text-align: center; color: #666; margin-top: 0.5rem;">
-          Per-axis feasibility scores derived from MuJoCo-simulated retargeted SMPL motion.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+    <p class="viewer-lead">
+      We recover SMPL body meshes from generated videos and retarget them onto a humanoid in the
+      <a href="https://mujoco.org">MuJoCo</a> simulator. Three feasibility scores are computed per video.
+      Pick an axis below to see the per-frame analysis and the recovered 3D body for a representative video.
+    </p>
 
-<section class="section">
-  <div class="container is-max-desktop">
-    <h2 class="title is-3 has-text-centered">Alignment with Human Judgment</h2>
-    <div class="content">
-      <p>
-        Each of our three axes correlates more strongly with human preference rankings than existing 2D-based
-        rewards, and the combined score outperforms each axis alone.
-      </p>
-      <img src="./static/figures/human_alignment.jpg" alt="Human alignment" style="width: 100%; border-radius: 6px;">
+    <div id="scene-picker" class="axis-picker">
+      <button data-axis="kinematic">
+        <span class="axis-icon"><i class="fas fa-walking"></i></span>
+        <span class="axis-name">Kinematic</span>
+        <span class="axis-desc">joint limits &amp; self-penetration</span>
+      </button>
+      <button data-axis="contact">
+        <span class="axis-icon"><i class="fas fa-shoe-prints"></i></span>
+        <span class="axis-name">Contact</span>
+        <span class="axis-desc">foot anchoring &amp; balance</span>
+      </button>
+      <button data-axis="dynamic">
+        <span class="axis-icon"><i class="fas fa-bolt"></i></span>
+        <span class="axis-name">Dynamic</span>
+        <span class="axis-desc">forces &amp; torques</span>
+      </button>
     </div>
+
+    <p id="scene-label" class="scene-label"></p>
+
+    <img id="axis-figure" class="axis-figure" src="./static/figures/smpl_kin.jpg" alt="Per-axis feasibility metric illustration">
+
+    <div class="viewer-card">
+      <div class="viewer-grid">
+        <div class="viewer-panel">
+          <div class="viewer-label">Generated video</div>
+          <video id="vid" class="viewer-video" muted playsinline preload="auto"></video>
+        </div>
+        <div class="viewer-panel">
+          <div class="viewer-label">Recovered SMPL · drag to orbit</div>
+          <canvas id="three-canvas"></canvas>
+        </div>
+      </div>
+
+      <div class="transport">
+        <button id="play-btn" class="play-btn">Play</button>
+        <input type="range" id="scrub" min="0" max="44" value="0" step="1">
+      </div>
+    </div>
+
+    <p class="viewer-tip">Drag · scroll · right-click drag to pan</p>
   </div>
 </section>
 
@@ -410,6 +418,16 @@
     </div>
   </div>
 </footer>
+
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+</script>
+<script type="module" src="./4d_viewer/viewer.js"></script>
 
 </body>
 </html>

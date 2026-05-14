@@ -1,0 +1,13 @@
+{
+  "key": "kinematic__baseline_wan_1.3b__00520",
+  "axis": "kinematic",
+  "baseline": "baseline_wan_1.3b",
+  "sample_id": 520,
+  "label": "A man performs a Crossover Reverse Lunge exercise, alternating his steps by stepping ba\u2026",
+  "fps": 16.0,
+  "num_frames": 45,
+  "num_verts": 10475,
+  "video": "videos/kinematic__baseline_wan_1.3b__00520.mp4",
+  "violations_pct": 4.444444444444445,
+  "has_accel": false
+}

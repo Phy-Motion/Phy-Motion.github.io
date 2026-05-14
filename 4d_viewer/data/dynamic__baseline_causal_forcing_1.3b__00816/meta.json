@@ -1,0 +1,13 @@
+{
+  "key": "dynamic__baseline_causal_forcing_1.3b__00816",
+  "axis": "dynamic",
+  "baseline": "baseline_causal_forcing_1.3b",
+  "sample_id": 816,
+  "label": "A single person is performing a baseball pitch, starting with a wind-up motion, then st\u2026",
+  "fps": 16.0,
+  "num_frames": 45,
+  "num_verts": 10475,
+  "video": "videos/dynamic__baseline_causal_forcing_1.3b__00816.mp4",
+  "violations_pct": 100.0,
+  "has_accel": true
+}
