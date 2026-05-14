@@ -507,12 +507,17 @@ pre {
 }
 .results-table {
   width: 100%;
+  min-width: 0;
+  table-layout: auto;
   border-collapse: collapse;
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
   color: #2d3e52;
 }
+/* Numeric data cells stay narrow */
+.results-table tbody td,
+.results-table thead th { white-space: nowrap; }
 .results-table thead th {
   padding: 5px 5px;
   font-weight: 600;
@@ -588,6 +593,82 @@ pre {
 @media (max-width: 900px) {
   .results-table { font-size: 12px; }
   .results-table tbody td, .results-table thead th { padding: 6px 4px; }
+}
+
+/* ---------- Human preference (Elo + heatmap) ---------- */
+.hp-lead {
+  text-align: center;
+  color: #5e6f80;
+  max-width: 880px;
+  margin: 0 auto 28px;
+  line-height: 1.55;
+  font-size: 14px;
+}
+.hp-lead em { color: #467191; font-style: normal; font-weight: 500; }
+
+.hp-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  align-items: center;
+  justify-content: center;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.hp-elo {
+  flex: 0 1 420px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.hp-heatmap {
+  flex: 0 1 540px;
+  min-width: 0;
+  max-width: 100%;
+}
+.hp-elo .elo-table { width: 100%; }
+.hp-heatmap img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.hp-elo .elo-table {
+  font-size: 13px;
+}
+.hp-elo .elo-table thead th {
+  background: #f7f8f5;
+  font-weight: 600;
+  padding: 8px 10px;
+}
+.hp-elo .elo-table tbody td {
+  padding: 6px 10px;
+}
+.hp-elo .elo-table tr.elo-divider td {
+  padding: 0;
+  border-bottom: 1px solid rgba(16, 32, 48, 0.18);
+  background: transparent;
+}
+.hp-elo .elo-table tr.ours-row td {
+  background: rgba(232, 240, 244, 0.6);
+}
+.hp-elo .elo-table tr.ours-row td .best {
+  font-weight: 700;
+  color: #1a2a3d;
+}
+.hp-elo .elo-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0 0 8px;
+  color: #5e6f80;
+  font-size: 13px;
+  font-weight: 400;
+}
+.hp-elo .elo-table caption strong { color: #2d3e52; font-weight: 600; }
+
+.hp-heatmap img {
+  box-shadow: 0 8px 24px rgba(16, 32, 48, 0.08);
+  border: 1px solid rgba(16, 32, 48, 0.08);
 }
 
 .play-btn {
@@ -669,22 +750,19 @@ input#scrub::-moz-range-thumb {
 
 .table-wrap {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: visible;
   margin: 1.5rem 0;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   background: #ffffff;
 }
-
-.results-table {
-  width: 100%;
-  min-width: 1100px;
-  border-collapse: collapse;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 14px;
-  line-height: 1.35;
-  color: #111827;
+/* Re-enable horizontal scroll only on truly narrow screens */
+@media (max-width: 800px) {
+  .table-wrap { overflow-x: auto; }
 }
+
+/* Note: the primary .results-table rule (font/family/sizing) is defined
+   earlier in this file. This block intentionally avoids re-declaring those. */
 
 .results-table caption {
   caption-side: top;
